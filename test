@@ -1,0 +1,35 @@
+#!/bin/bash
+# Wrapper for the AWSome python tool.
+# This ensures that the tool is available and will run it with the correct path
+PYTHON=python
+PYTEST=py.test
+
+
+# Find the path to the directory, resolving symlinks to this script.
+# From http://stackoverflow.com/a/246128
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+  DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+done
+DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+
+
+# Check that the package exists.
+if [ ! -d "${DIR}/AWSome" ]; then
+  echo "Unable to locate the AWSome package in ${DIR}" >&2
+  exit -1
+fi
+
+
+# Check python version.
+is_python_3=$(${PYTHON} --version |& grep -c "Python 3")
+if [ "${is_python_3}" -ne 1 ]; then
+  echo "Need Python 3 to run" >&2
+  exit -2
+fi
+
+
+# Run the main file.
+PYTHONPATH="${DIR}:${PYTHONPATH}" ${PYTEST} $*
