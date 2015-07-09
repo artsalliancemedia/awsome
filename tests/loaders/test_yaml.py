@@ -8,6 +8,7 @@ from tests.fixtures.yaml import broken_yaml
 from tests.fixtures.yaml import commands_not_a_list
 from tests.fixtures.yaml import commands_not_dicts
 from tests.fixtures.yaml import commands_too_many_dicts
+from tests.fixtures.yaml import commands_with_custom_options
 from tests.fixtures.yaml import commands_with_wrong_format
 from tests.fixtures.yaml import commands_with_wrong_values
 from tests.fixtures.yaml import list_vpcs
@@ -70,3 +71,10 @@ def test_returns_a_list_of_commands(list_vpcs, options):
   assert isinstance(commands, list)
   for command in commands:
     assert isinstance(command, AWSCommand)
+
+
+def test_x_options_are_ignored(commands_with_custom_options, options):
+  loader = YamlLoader(options)
+  commands = loader.load(commands_with_custom_options)
+  cmd = commands[0].format()
+  assert cmd == "aws ec2 describe-vpcs"

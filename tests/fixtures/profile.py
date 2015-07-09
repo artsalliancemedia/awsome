@@ -10,7 +10,7 @@ def yaml_config(request):
 
 @pytest.fixture
 def yaml_profile(request):
-  return stub_file(request, "vpc: a\ngroup: { ci: { test: b } }")
+  return stub_file(request, "# A comment\nvpc: a\ngroup: { ci: { test: b } }")
 
 
 @pytest.fixture

@@ -21,6 +21,10 @@ class YamlLoader(Loader):
       - command2 subcommand1:
           option1: value
           option2: value
+
+          # The options starting with x- or X- are ignored.
+          x-internal-option: 1
+          X-internal-option: 2
   """
   def _process(self, config, source):
     # Is it a dict?
@@ -87,14 +91,22 @@ class YamlLoader(Loader):
       # Convert to command.
       subcommand = command[1] if len(command) == 2 else None
       command = command[0]
+
+      extentions = dict(
+          (name[2:], config)
+          for (name, config) in command_value.items()
+          if name.startswith("x-") or name.startswith("X-")
+      ) if command_value is not None else None
       options = [
           AWSCommand.get_option(name, value)
           for (name, value) in command_value.items()
+          if not (name.startswith("x-") or name.startswith("X-"))
       ] if command_value is not None else None
 
       commands.append(AWSCommand(
         command, subcommand=subcommand,
-        globals=globals, options=options
+        globals=globals, options=options,
+        extentions=extentions
       ))
 
     return commands

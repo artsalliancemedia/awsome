@@ -1,6 +1,6 @@
 # App requirements.
 pyyaml==3.11
-
+ruamel.yaml==0.10.2
 
 # Test requirements
 pytest

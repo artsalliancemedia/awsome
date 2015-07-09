@@ -24,17 +24,20 @@ class AWSCommand(object):
 
     return StringOption(name, str(value))
 
-  def __init__(self, command, globals=None, options=None, subcommand=None):
+  def __init__(self, command, globals=None, options=None, subcommand=None,
+               extentions=None):
     """Creates a aws command representation.
     :param str command: The command to execute.
     :param [CommandOption] globals: The global options to set, if any.
     :param [CommandOption] options: The options for the [sub-]command.
     :param str subcommand: The sub-command to execute.
+    :parma dict extentions: A dictionary with extentions configurations.
     """
     self._command = command
     self._globals = globals or []
     self._options = options or []
     self._subcommand = subcommand
+    self.extentions = extentions
 
   def format(self):
     """Formats the command into a string the user can run."""

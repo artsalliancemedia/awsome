@@ -1,3 +1,4 @@
+import yaml
 import pytest
 
 from tests.fixtures import stub_file
@@ -25,6 +26,17 @@ def commands_not_dicts(request):
 def commands_too_many_dicts(request):
   """A YAML dict with commands list of more than one dict"""
   return stub_file(request, "commands:\n  - a: b\n    c: d")
+
+
+@pytest.fixture
+def commands_with_custom_options(request):
+  """A YAML dict with commands list and some custom values."""
+  return stub_file(request, yaml.dump({ "commands": [{
+    "ec2 describe-vpcs": {
+      "X-Test-field": 1,
+      "x-test-field": 2
+    }
+  }] }))
 
 
 @pytest.fixture

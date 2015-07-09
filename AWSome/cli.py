@@ -5,6 +5,7 @@ import yaml
 
 from AWSome import __version__
 from AWSome.executor import Executor
+from AWSome.extentions.manager import ExtentionsManager
 from AWSome.loader.factory import get_loader
 
 
@@ -49,15 +50,35 @@ class Client(object):
 
     loader = get_loader(options)
     commands = loader.load(options.file)
+    commands_count = len(commands)
+    extentions = ExtentionsManager(options)
 
-    for command in commands:
+    for idx in range(commands_count):
+      command = commands[idx]
       cmd = command.format()
+
       if options.execute:
-        print("[RUN>>>>>] " + cmd)
         executor = Executor(cmd)
-        code = executor.run()
+        print("[RUN>>>>>] " + cmd)
+
+        code = executor.run(buffer=bool(command.extentions))
+        reload_conf = extentions.post_run(command, executor)
+
         if code != 0:
           print("[ERROR>>>] " + str(code))
+
+        if reload_conf:
+          # Reload the commands list.
+          # Check that the number of commands did not change.
+          # Past commands are ignored but new ones will be executed
+          # with the new configuration.
+          new_commands = loader.load(options.file)
+          if len(new_commands) != commands_count:
+            raise Exception(
+                "Unexpected change in number of commands "
+                "after configuration reload."
+            )
+          commands = new_commands
 
       else:
         print(cmd)
