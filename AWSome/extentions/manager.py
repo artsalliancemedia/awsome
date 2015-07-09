@@ -1,5 +1,6 @@
 import sys
 
+from AWSome.extentions import SkipException
 from AWSome.extentions.update_profile import UpdateProfile
 
 
@@ -38,7 +39,13 @@ class ExtentionsManager(object):
     # Execute the extentions.
     reload_conf = False
     for extention in extentions:
-      ext = self._get_extention(extention)
-      reload_conf = ext.post_run(command, executor) or reload_conf
+      try:
+        ext = self._get_extention(extention)
+        reload_conf = ext.post_run(command, executor) or reload_conf
+
+      except SkipException as ex:
+        sys.stderr.write(
+            "[ERROR] Profile update failed: {0}. Moving on.".format(str(ex))
+        )
 
     return reload_conf
