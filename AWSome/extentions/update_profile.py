@@ -9,6 +9,10 @@ from AWSome.extentions import SkipException
 class UpdateProfile(Extention):
   """Updates a profile YAML with the result of a command."""
   def post_run(self, command, executor):
+    # If the command failed do not bother.
+    if executor.return_code() != 0:
+      return
+
     # Check that all options are provided.
     if not self._options.profile:
       raise SkipExcetpion(
@@ -22,12 +26,12 @@ class UpdateProfile(Extention):
 
     if not config.get("key"):
       raise Excetpion(
-          "Updates to profile require a key to update."
+          "Updates to profile require a key to update"
       )
 
     if not config.get("from"):
       raise Excetpion(
-          "Updates to profile require a value to update from."
+          "Updates to profile require a value to update from"
       )
 
     # Check that stdout is JSON decodable.
@@ -39,7 +43,7 @@ class UpdateProfile(Extention):
     except ValueError:
       # Assume that the command failed because the configuration is
       # already applied to AWS and the profile is already up to date.
-      raise SkipException("Profile update skipped as AWS output is not JSON.")
+      raise SkipException("Profile update skipped as AWS output is not JSON")
 
     # Check that the JSON key is available.
     node = data
@@ -47,7 +51,7 @@ class UpdateProfile(Extention):
     for source in sources:
       if not isinstance(node, dict) or source not in node:
         raise SkipException(
-            "Profile update failed as source '{0}' is missing.".format(config["from"])
+            "Profile update failed as source '{0}' is missing".format(config["from"])
         )
       node = node[source]
     source_value = node
@@ -63,7 +67,7 @@ class UpdateProfile(Extention):
     for source in sources[:-1]:
       if not isinstance(node, dict):
         raise Exception(
-            "Profile update failed as key '{0}' is missing in profile."
+            "Profile update failed as key '{0}' is missing in profile"
             .format(config["key"])
         )
       if source not in node:
@@ -74,7 +78,7 @@ class UpdateProfile(Extention):
     source = sources[-1]
     if not isinstance(node, dict):
       raise Exception(
-          "Profile update failed as key '{0}' is missing in profile."
+          "Profile update failed as key '{0}' is missing in profile"
           .format(config["key"])
       )
 

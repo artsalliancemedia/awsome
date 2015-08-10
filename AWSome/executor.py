@@ -9,6 +9,10 @@ class Executor(object):
     self._command = command
     self._stderr = None
     self._stdout = None
+    self._retcode = None
+
+  def return_code(self):
+    return self._retcode
 
   def run(self, buffer=False):
     process = Popen(
@@ -25,14 +29,15 @@ class Executor(object):
     else:
       process.wait()
 
-    return process.returncode
+    self._retcode = process.returncode
+    return self._retcode
 
   def stderr(self):
     if self._stderr:
-      return self._stderr.decode('utf-8').strip()
+      return self._stderr.decode('utf-8')
     return ""
 
   def stdout(self):
     if self._stdout:
-      return self._stdout.decode('utf-8').strip()
+      return self._stdout.decode('utf-8')
     return ""

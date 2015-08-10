@@ -45,7 +45,7 @@ class ExtentionsManager(object):
 
       except SkipException as ex:
         sys.stderr.write(
-            "[ERROR] Profile update failed: {0}. Moving on.".format(str(ex))
+            "[ERROR] Profile update failed: {0}. Moving on.\n".format(str(ex))
         )
 
     return reload_conf
