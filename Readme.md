@@ -79,7 +79,7 @@ Symlinks to this scripts are supported as well so you can "install" the tool.
 From the directory that contains the script:
 
     ln -s "${PWD}/awsome" /usr/bin/awsome
-    "${PWD}/awsome" /usr/bin/awsomewsome --help  # Test the command is now working.
+    awsome --help  # Test the command is now working.
 
 
 Installing and running from an egg

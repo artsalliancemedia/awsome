@@ -89,7 +89,7 @@ class Client(object):
     """Print version information."""
     aws_ver_cmd = Executor("aws --version")
     aws_ver_cmd.run(buffer=True)
-    aws_verison = aws_ver_cmd.stderr()
+    aws_verison = aws_ver_cmd.stderr().strip()
 
     print("--- Core ---")
     print("AWSome: " + __version__)
