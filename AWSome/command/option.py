@@ -29,6 +29,11 @@ class ListOption(CommandOption):
     return "--{0} {1}".format(self._name, ' '.join(escaped))
 
 
+class LiteralOption(CommandOption):
+  def format(self):
+    return self._value
+
+
 class StringOption(CommandOption):
   def format(self):
     value = self._value.replace('"', '\\"')

@@ -1,5 +1,6 @@
 from AWSome.command.option import BoolOption
 from AWSome.command.option import ListOption
+from AWSome.command.option import LiteralOption
 from AWSome.command.option import StringOption
 
 
@@ -16,6 +17,9 @@ class AWSCommand(object):
                   CommandOption to return.
     :returns: A CommandOption.
     """
+    if str(name).startswith("--"):
+      return LiteralOption(name, value)
+
     if isinstance(value, bool):
       return BoolOption(name, value)
 
