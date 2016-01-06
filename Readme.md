@@ -31,6 +31,7 @@ Table of contents
   * [Building the egg](#building-the-egg)
   * [YAML configuration format](#yaml-configuration-format)
   * [Profiles](#profiles)
+  * [AWS CLI Profiles](#aws-cli-profiles)
 
 
 Requirements
@@ -156,3 +157,19 @@ If the variable is not defined in the profile an error is raised.
 
 Note that if a yaml file with a `{{ var }}` token is processed without a
 profile the YAML parser will complain as `{{` is not allowed.
+
+
+AWS CLI Profiles
+----------------
+The AWS command line tool supports profiles too.
+These profiles are used to act as different users without having to log
+in multiple times and have nothing to do with AWSome profiles.
+
+There are multiple ways to specify which profile to use but since the
+command line is called by AWSome and not us the 
+[environment variable](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html#cli-environment)
+solution is the simplest:
+
+    aws --profile thunder-prod configure
+    export AWS_DEFAULT_PROFILE="thunder-prod"
+    awsome --execute ...
